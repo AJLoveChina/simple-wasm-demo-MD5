@@ -25,4 +25,5 @@ npm run dev
 
 
 ### link
-md5 lib is from [https://github.com/pod32g/MD5](https://github.com/pod32g/MD5)
+* md5 lib is from [https://github.com/pod32g/MD5](https://github.com/pod32g/MD5)
+* hs2 lib for quick http/https [https://github.com/AJLoveChina/hs2](https://github.com/AJLoveChina/hs2)
