@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MD5 by webassemly</title>
+</head>
+<body>
+
+
+
+<script src="./a.out.js"></script>
+<script>
+    Module.onRuntimeInitialized = async _ => {
+        window.api = {
+            md5Hash: Module.cwrap('md5Hash', 'number', ['number', 'number']),
+        };
+
+        md5("123456")
+    };
+
+
+    function md5(message) {
+        console.log("message", message);
+        let data = new TextEncoder().encode(message);
+        let ptr = Module._malloc(data.length);
+        let subArray = Module.HEAPU8.subarray(ptr, ptr + data.length);
+        subArray.set(data, 0, data.length);
+
+        let resultPtr = window.api.md5Hash(ptr, data.length);
+
+        Module._free(ptr);
+
+        let md5Length = 16; // 16 bytes,  4 bit => 1 字符,  16byte => 128bit => 32 字符
+        let resultBytes = new Uint8Array(md5Length);
+        let resultSubArray = Module.HEAP8.subarray(resultPtr, resultPtr + md5Length);
+        resultBytes.set(resultSubArray, 0, md5Length);
+
+        let hex = [...resultBytes].map(byte => {
+            let str = byte.toString(16);
+            if (str.length < 2) {
+                str = "0" + str;
+            }
+            return str;
+        }).join('');
+        console.log("hex result", hex);
+    }
+
+</script>
+
+
+</body>
+</html>
